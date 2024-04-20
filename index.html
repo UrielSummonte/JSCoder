@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="./js/script.js" defer></script>
+    <link rel="stylesheet" href="./css/styles.css">
+    <title>Alumnos</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">ALUMNOS</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Registrar Alumno</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Eliminar Alumno</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Listar Alumnos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mejor Alumno</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Ingrese un apellido"
+                            aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="titulo">
+            <h1>Registro de Notas de Alumno</h1>
+        </div>
+
+        <section>
+            <h2>Funcionamiento del programa:</h2>
+
+            <h5>El muestra un menu con 5 opciones y solo se puede salir presionando la tecla "s" o "S". Las opciones se describen a continuación.
+            </h5>
+
+            <ul>
+                <li>
+                    <h5>Registrar Alumno</h5>
+                    <h6>En esta opción se permite registrar DNI, Apellido, Nombre y tres notas por trimestre, en un total de tres trimestres (9 notas en total)</h6>
+                </li>
+                <li>
+                    <h5>Eliminar Alumno</h5>
+                    <h6>En esta opción se permite eliminar el úlitimo alumno ingresado, siempre y cuando el arreglo de alumnos no este vacío</h6>
+                </li>
+                <li>
+                    <h5>Buscar Alumno</h5>
+                    <h6>En esta opción se permite buscar un alumno por su apellido y mostrar si el mismo esta o no en el arreglo</h6>
+                </li>
+                <li>
+                    <h5>Listar Alumnos</h5>
+                    <h6>En esta opción se muestra por consola el arreglo con todos los alumnos cargados, además de su promedio por trimestre y promedio general</h6>
+                </li>
+                <li>
+                    <h5>Mejor Alumno</h5>
+                    <h6>En esta opción se muestra por consola el alumno con el promedio general mas alto</h6>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
