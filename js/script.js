@@ -326,6 +326,7 @@ function buscarFallida(){
     }, 2000);
 }
 
+// Funcion que captura el span si el array alumnos esta vacio y muestra un mensaje por dos segundos
 function accionFallida(){
     var span = document.getElementById("listadoVacio");
     span.style.display = "block";
@@ -334,13 +335,11 @@ function accionFallida(){
     }, 2000);
 }
 
+// Funcion que muestra el alumno encontrado por 3 segundos
 function mostrarBusqueda(){
-    //var div = document.getElementById("encontrado");
-    //console.log(div);
-    //div.style.display = "d-flex";
     setTimeout(function(){
         limpiarBusqueda();
-    }, 2000);
+    }, 3000);
 }
 
 // Funcion que calcula el mayor de todos los promedios generales del array de alumnos

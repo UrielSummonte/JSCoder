@@ -1,114 +1,114 @@
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-body{
+body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: weight;
   font-style: normal;
 }
 
-header{
-    margin-bottom: 2rem;
+header {
+  margin-bottom: 2rem;
 }
 
-h1{
-    text-align: center;
-    margin-bottom: 2rem;
-    margin-top: 0;
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 0;
 }
 
-h2{
-    margin-bottom: 1.5rem;
+h2 {
+  margin-bottom: 1.5rem;
 }
 
-h5{
-    margin-bottom: 1rem;
+h5 {
+  margin-bottom: 1rem;
 }
 
-.fondo-index{
+.fondo-index {
   background-color: #dee2e6;
 }
 
-.fondo-alumnos{
+.fondo-alumnos {
   background-color: #dee2e6;
 }
 
-.nav-link{
+.nav-link {
   font-size: 1.3rem;
 }
 
-.navbar-brand{
+.navbar-brand {
   font-size: 2rem;
 }
 
-#errorBuscar, #listadoVacio{
+#errorBuscar,
+#listadoVacio {
   display: none;
   font-size: 1.2rem;
   color: white;
 }
 
 .form-contacto {
-    padding: 1rem;
-  }
+  padding: 1rem;
+}
 
-  .form-contacto legend{
-    font-size: 1.7rem;
-    font-weight: 500;
-    color: white;
-  }
+.form-contacto legend {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: white;
+}
 
-  .form-contacto label{
-    color: white;
-    text-align: left;
-  }
+.form-contacto label {
+  color: white;
+  text-align: left;
+}
 
-  .form-contacto h5{
-    color: white;
-  }
+.form-contacto h5 {
+  color: white;
+}
 
-  .btn{
-      background-color: rgb(36, 36, 235);
-  }
+.btn {
+  background-color: rgb(36, 36, 235);
+}
 
-  .btn:hover{
-    background-color: rgb(66, 66, 224);
-  }
+.btn:hover {
+  background-color: rgb(66, 66, 224);
+}
 
-  .mejores{
-    font-size: 1.7rem;
-    font-weight: 600;
-  }
-  
-  .card-body{
-    background-color: rgb(153, 151, 151);
-  }
-  
-  .card-title{
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    text-align: center;
-    background-color: rgb(133, 130, 130);
-    font-weight: 600;
-  }
+.mejores {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
 
-  .card-text{
-    margin-bottom: 0.5rem;
-  }
+.card-body {
+  background-color: rgb(153, 151, 151);
+}
 
-  .texto-alumno-encontrado{
-    font-size: 0.8rem;
-  }
+.card-title {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  text-align: center;
+  background-color: rgb(133, 130, 130);
+  font-weight: 600;
+}
 
-  .titulo-alumno-encontrado{
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    padding: 0.2rem;
-    text-align: center;
-    font-size: 1rem;
-    background-color: rgb(133, 130, 130);
-    font-weight: 600;
-  }
-  
+.card-text {
+  margin-bottom: 0.5rem;
+}
+
+.texto-alumno-encontrado {
+  font-size: 0.8rem;
+}
+
+.titulo-alumno-encontrado {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem;
+  text-align: center;
+  font-size: 1rem;
+  background-color: rgb(133, 130, 130);
+  font-weight: 600;
+}
