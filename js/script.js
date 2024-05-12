@@ -198,7 +198,7 @@ function generarAlumno(alumno) {
     //Se crea el div a insertar
     div.innerHTML = `
         <div class="card" style="width: 18rem;">
-            <img src="../assets/img/estudiante.jpg" class="card-img-top w-50 h-50 mx-auto" alt="...">
+            <img src="assets/img/estudiante.jpg" class="card-img-top w-50 h-50 mx-auto" alt="...">
             <div class="card-body">
                 <h5 class="card-title">${alumno.apellido} ${alumno.nombre}</h5>
                 <p class="card-text"> D.N.I.: ${alumno.dni}</p>
@@ -223,7 +223,7 @@ function generarAlumnoEncontrado(alumno) {
     // Se crea el div a insertar
     div.innerHTML = `
         <div class="card" style="width: 12rem;">
-            <img src="../assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
+            <img src="assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
             <div class="card-body">
                 <h5 class="card-title titulo-alumno-encontrado">${alumno.apellido} ${alumno.nombre}</h5>
                 <p class="card-text texto-alumno-encontrado"> D.N.I.: ${alumno.dni}</p>
@@ -242,7 +242,7 @@ function generarAlumnosTop(alumno) {
     // Se crea el div a insertar
     div.innerHTML = `
         <div class="card" style="width: 12rem;">
-            <img src="../assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
+            <img src="assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
             <div class="card-body">
                 <h5 class="card-title titulo-alumno-encontrado">${alumno.apellido} ${alumno.nombre}</h5>
                 <p class="card-text texto-alumno-encontrado"> D.N.I.: ${alumno.dni}</p>
