@@ -1,221 +1,405 @@
 const alumnos = [];
 
+const formulario = document.getElementById("formulario");
+const contenedorAlumnos = document.getElementById("alumnos");
+const contenedorBusqueda = document.getElementById("resultadoBusqueda");    
+const contenedorMejores = document.getElementById("mejoresAlumnos");
+const menuEliminar = document.getElementById("eliminarUltimo");
+const menuOrdenar = document.getElementById("ordenarAsc");
+
 class Alumno {
-    constructor({ dni, apellido, nombre, trim1, trim2, trim3, promedio1, promedio2, promedio3, promediog }) {
+    constructor({ dni, apellido, nombre, t1n1, t1n2, t1n3, t2n1, t2n2, t2n3, t3n1, t3n2, t3n3, promedio1, promedio2, promedio3, promediog }) {
         this.dni = dni;
         this.apellido = apellido;
         this.nombre = nombre;
-        this.trim1 = trim1;
-        this.trim2 = trim2;
-        this.trim3 = trim3;
+        this.t1n1 = t1n1;
+        this.t1n2 = t1n2;
+        this.t1n3 = t1n3;
+        this.t2n1 = t2n1;
+        this.t2n2 = t2n2;
+        this.t2n3 = t2n3;
+        this.t3n1 = t3n1;
+        this.t3n2 = t3n2;
+        this.t3n3 = t3n3;
         this.promedio1 = promedio1;
         this.promedio2 = promedio2;
         this.promedio3 = promedio3;
         this.promediog = promediog;
     }
+}
 
-    datosAlumno() {
-        console.info(`Datos del Alumno:\nApellido: "${this.apellido}"\nNombres: "${this.nombre}"\nD.N.I.: "${this.dni}"\nNotas Trimestre 1: "${this.trim1.join(", ")}"\nPromedio Trimestre 1: "${this.promedio1}"\nNotas Trimestre 2: "${this.trim2.join(", ")}"\nPromedio Trimestre 2: "${this.promedio2}"\nNotas Trimestre 3: "${this.trim3.join(", ")}"\nPromedio Trimestre 3: "${this.promedio3}"\nPromedio General: "${this.promediog}"`)
-    }
-
-    datosMAlumno() {
-        console.info(`Datos del/los Alumno/s con mejor/es promedio/s:\nApellido: "${this.apellido}"\nNombres: "${this.nombre}"\nD.N.I.: "${this.dni}"\nPromedio General: "${this.promediog}"`)
+function validarDNI(input) {
+    // Obtener el valor del input
+    var dni = input.value;
+    // Expresión regular para verificar que el valor tenga exactamente 8 dígitos
+    var regex = /^\d{8}$/;
+    var maxLength = 8;
+    // Verificar si el valor cumple con la expresión regular
+    if (!regex.test(dni)) {
+        // Si no cumple, eliminar el último carácter ingresado
+        input.value = dni.slice(0, 8);
+        // Si no cumple con la longitud muestra el span
+    } else if (dni.length < maxLength) {
+        document.getElementById("errorDNI").style.display = "inline";
+        // Si la longitud es correcta oculta el span
+    } else {
+        document.getElementById("errorDNI").style.display = "none";
     }
 }
 
-//Funcion que analiza la cadena ingresada y verifica que no este vacia, que ingrese solo letras y controla un maximo de caracteres permitidos
-function solicitarTexto(texto, long) {
-    let valor;
-    do {
-        valor = prompt(`Ingrese un ${texto}`);
-        if (!valor) {
-            alert(`Por favor ingrese un ${texto} válido`);
-        } else if (!/^[a-zA-Z ]+$/.test(valor)) {
-            alert("Por favor ingrese solo letras");
-        } else if (valor.length > long) {
-            alert(`El máximo de caracteres soportados es ${long}`)
+function validarApellidoNombre(input) {
+    // Obtener el valor del input
+    var valor = input.value;
+    // Expresión regular para verificar el formato del apellido
+    var regex = /^[A-Za-z][A-Za-z\s]*$/;
+    // Verificar si el valor cumple con la expresión regular y no comienza con espacios en blanco
+    if (!regex.test(valor) || /^\s/.test(valor)) {
+        // Si no cumple, eliminar los caracteres no permitidos y los espacios iniciales
+        input.value = valor.replace(/^\s+/, '').replace(/[^A-Za-z\s]/g, '');
+    }
+}
+
+function validarNota(input) {
+    // Obtener el valor del input
+    var nota = input.value;
+    // Expresión regular para permitir solo números decimales
+    var regex = /^\d*\.?\d*$/;
+    // Verificar si el valor cumple con la expresión regular
+    if (!regex.test(nota)) {
+        // Si no cumple, eliminar los caracteres no permitidos
+        input.value = nota.replace(/[^\d.]/g, '');
+    }
+}
+
+function moveToNextInput(event, currentInput) {
+    // Si se presiona la tecla enter
+    if (event.key === "Enter") {
+        // Previene la recarga de la pagina
+        event.preventDefault();
+        // Guarda en el array todos los inputs
+        var inputs = Array.from(document.querySelectorAll('input:not([type="submit"])'));
+        var index = inputs.indexOf(currentInput);
+        if (index !== -1 && index < inputs.length - 1) {
+            // Avanza de input al presionar enter
+            inputs[index + 1].focus();
+            //Si el input es t3n3 pasa el foco al boton
+        } else if (currentInput.id === "t3n3") {
+            document.querySelector('button[id="registrar"]').focus();
+        } else if (currentInput.id === "apellidoBusqueda") {
+            document.querySelector('button[id="buscar"]').focus();
         }
-    } while (!valor || !/^[a-zA-Z ]+$/.test(valor) || valor.length > long);
-    return valor;
-}
-
-//Funcion que permite ingresar un numero y controla que no este vacio, que solo sean numeros y que tenga una longitud de 8 caracteres
-function solicitarDNI() {
-    let valor;
-    do {
-        valor = prompt(`Ingrese el D.N.I. sin puntos ni espacios`);
-        if (!valor) {
-            alert(`Por favor ingrese un D.N.I. válido`);
-        } else if (!/^[0-9]+$/.test(valor)) {
-            alert("Por favor ingrese solo números");
-        } else if (valor.length !== 8) {
-            alert(`El número ingresado debe tener 8 caracteres`)
-        }
-    } while (!valor || !/^[0-9]+$/.test(valor) || valor.length !== 8);
-    return valor;
-}
-
-//Funcion que permite ingresar 3 notas y las guarda en un arreglo. Controla que no este vacio, que solo sea un numero entero o un numero con un punto y un decimal y que este entre 0 y 10
-function solicitarNotas(trimestre) {
-    let notas = [];
-    for (let i = 0; i < 3; i++) {
-        let nota;
-        do {
-            nota = prompt(`Ingrese la nota ${i + 1} del ${trimestre}`);
-            if (nota === null || nota.trim() === "") {
-                alert("Ingrese una nota válida");
-            } else if (!/^\d+(\.\d)?$/.test(nota)) {
-                alert("Por favor ingrese solo números con un lugar decimal opcional");
-            } else if (nota.indexOf('.') !== -1 && nota[nota.indexOf('.') + 1] === undefined) {
-                alert("Por favor ingrese un dígito después del punto");
-            } else if (nota.split(".").length - 1 > 1) {
-                alert("Solo puede escribir un punto decimal");
-            } else if (isNaN(parseFloat(nota)) || parseFloat(nota) < 0 || parseFloat(nota) > 10) {
-                alert("Ingrese una nota entre 0 y 10");
-            }
-        } while (nota === null || nota.trim() === "" || isNaN(parseFloat(nota)) || parseFloat(nota) < 0 || nota.split(".").length - 1 > 1 || parseFloat(nota) > 10 || (nota.indexOf('.') !== -1 && nota[nota.indexOf('.') + 1] === undefined));
-        notas.push(parseFloat(nota));
     }
-    return notas;
+}
+
+function validarFormulario() {
+    // Guardo en dni el valor del input dni
+    var dni = document.getElementById("dni");
+    var maxLength = 8; // número máximo de dígitos permitidos
+    // Verifico si la longitud es distinta de lo permitido
+    if (dni.value.length !== maxLength) {
+        // Muestra el span errorDNI
+        document.getElementById("errorDNI").style.display = "inline";
+        // Si esta todo correcto oculta el span, carga el alumno y verifica los mejores alumnos
+    } else {
+        document.getElementById("errorDNI").style.display = "none";
+        cargarAlumno(); // Permitir envío del formulario
+        mejorAlumno(alumnos);
+    }
+}
+
+formulario.addEventListener("submit", (event) => {
+    //Evitamos que se recargue la pagina
+    event.preventDefault();
+    //Valida los datos del formulario
+    validarFormulario();
+})
+
+formBuscar.addEventListener("submit", (event) => {
+    //Evitamos que se recargue la pagina
+    event.preventDefault();
+    // Busca el alumno y resetea el form buscar
+    buscarAlumno(alumnos);
+    formBuscar.reset();
+})
+
+menuEliminar.addEventListener("click", (event) => {
+    //Evitamos que se recargue la pagina
+    event.preventDefault();
+    // Busca el alumno y resetea el form buscar
+    eliminarUltimoAlumno(alumnos);
+})
+
+menuOrdenar.addEventListener("click", (event) => {
+    //Evitamos que se recargue la pagina
+    event.preventDefault();
+    // Busca el alumno y resetea el form buscar
+    ordenarListado(alumnos);
+})
+
+//Funcion que permite la carga de un alumno, asignando a las variables las funciones de cada caso, luego genera un nuevo objeto y lo guarda en el arreglo de alumnos
+function cargarAlumno() {
+    // Se captura los valores de los inputs y se hacen los calculos correspondientes
+    const dni = document.getElementById("dni").value;
+    const ape = document.getElementById("apellido").value.toUpperCase();
+    const nom = document.getElementById("nombre").value.toUpperCase();
+    const t1n1 = parseFloat(document.getElementById("t1n1").value);
+    const t1n2 = parseFloat(document.getElementById("t1n2").value);
+    const t1n3 = parseFloat(document.getElementById("t1n3").value);
+    const t2n1 = parseFloat(document.getElementById("t2n1").value);
+    const t2n2 = parseFloat(document.getElementById("t2n2").value);
+    const t2n3 = parseFloat(document.getElementById("t2n3").value);
+    const t3n1 = parseFloat(document.getElementById("t3n1").value);
+    const t3n2 = parseFloat(document.getElementById("t3n2").value);
+    const t3n3 = parseFloat(document.getElementById("t3n3").value);
+    const prom1 = calcularPromedio(t1n1, t1n2, t1n3);
+    const prom2 = calcularPromedio(t2n1, t2n2, t2n3);
+    const prom3 = calcularPromedio(t3n1, t3n2, t3n3);
+    const promg = calcularPromedio(prom1, prom2, prom3);
+
+    const alumno = new Alumno({
+        dni: dni,
+        apellido: ape,
+        nombre: nom,
+        t1n1: t1n1,
+        t1n2: t1n2,
+        t1n3: t1n3,
+        promedio1: prom1,
+        t2n1: t2n1,
+        t2n2: t2n2,
+        t2n3: t2n3,
+        promedio2: prom2,
+        t3n1: t3n1,
+        t3n2: t3n2,
+        t3n3: t3n3,
+        promedio3: prom3,
+        promediog: promg,
+    })
+    // Se carga el alumno el array de alumnos
+    alumnos.push(alumno);
+    // Genero el elemento alumno
+    const elementoAlumno = generarAlumno(alumno);
+    // Agrego en elemento alumno al contenedor
+    contenedorAlumnos.appendChild(elementoAlumno);
+    // Se limpia el formulario
+    formulario.reset();
 }
 
 //Funcion que recibe un arreglo de notas y calcula su promedio
-function calcularPromedio(arreglo) {
-    let aux = 0;
+function calcularPromedio(n1, n2, n3) {
+    let aux = n1 + n2 + n3;
     let promedio = 0;
-    for (let i = 0; i < arreglo.length; i++) {
-        aux = aux + arreglo[i];
-    }
-    promedio = parseFloat((aux / arreglo.length).toFixed(1));
+    promedio = parseFloat((aux / 3).toFixed(1));
 
     return promedio;
 }
 
+function generarAlumno(alumno) {
+    const div = document.createElement("div");
+    //Se crea el div a insertar
+    div.innerHTML = `
+        <div class="card" style="width: 18rem;">
+            <img src="../assets/img/estudiante.jpg" class="card-img-top w-50 h-50 mx-auto" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">${alumno.apellido} ${alumno.nombre}</h5>
+                <p class="card-text"> D.N.I.: ${alumno.dni}</p>
+                <p class="card-text"> Notas 1º trimestre: ${alumno.t1n1} - ${alumno.t1n2} - ${alumno.t1n3}</p>
+                <p class="card-text">Promedio 1º Timestre: ${alumno.promedio1}</p>
+                <p class="card-text"> Notas 2º trimestre: ${alumno.t2n1} - ${alumno.t2n2} - ${alumno.t2n3}</p>
+                <p class="card-text">Promedio 2º Timestre: ${alumno.promedio2}</p>
+                <p class="card-text"> Notas 3º trimestre: ${alumno.t3n1} - ${alumno.t3n2} - ${alumno.t3n3}</p>
+                <p class="card-text">Promedio 3º Timestre: ${alumno.promedio3}</p>
+                <p class="card-text">Promedio General: ${alumno.promediog}</p>
+            </div>
+        </div>
+    `;
+    //Se agregan las clases del div creado
+    div.classList.add("card", "listado");
+
+    return div;
+}
+
+function generarAlumnoEncontrado(alumno) {
+    const div = document.createElement("div");
+    // Se crea el div a insertar
+    div.innerHTML = `
+        <div class="card" style="width: 12rem;">
+            <img src="../assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
+            <div class="card-body">
+                <h5 class="card-title titulo-alumno-encontrado">${alumno.apellido} ${alumno.nombre}</h5>
+                <p class="card-text texto-alumno-encontrado"> D.N.I.: ${alumno.dni}</p>
+                <p class="card-text texto-alumno-encontrado">Promedio General: ${alumno.promediog}</p>
+            </div>
+        </div>
+    `;
+    //Se agregan las clases del div creado
+    div.classList.add("card", "encontrado");
+
+    return div;
+}
+
+function generarAlumnosTop(alumno) {
+    const div = document.createElement("div");
+    // Se crea el div a insertar
+    div.innerHTML = `
+        <div class="card" style="width: 12rem;">
+            <img src="../assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
+            <div class="card-body">
+                <h5 class="card-title titulo-alumno-encontrado">${alumno.apellido} ${alumno.nombre}</h5>
+                <p class="card-text texto-alumno-encontrado"> D.N.I.: ${alumno.dni}</p>
+                <p class="card-text texto-alumno-encontrado">Promedio General: ${alumno.promediog}</p>
+            </div>
+        </div>
+
+    `;
+    //Se agregan las clases del div creado
+    div.classList.add("card", "mejores");
+
+    return div;
+}
+
+// Funcion que remueve el contenido de una busqueda exitosa
+function limpiarBusqueda() {
+    // Se captura la clase card dentro del id y se lo remueve
+    const div = document.querySelectorAll("#resultadoBusqueda .encontrado");
+    if (div != null) {
+        div.forEach((elemento) => elemento.remove());   
+    }
+}
+
+// Funcion que remueve el contenido de una los mejores alumnos
+function limpiarMejores() {
+    // Se captura la clase card dentro del id y se lo remueve
+    const div = document.querySelectorAll("#mejoresAlumnos .mejores");
+    if (div != null) {
+        div.forEach((elemento) => elemento.remove());   
+    }
+}
+
+// Funcion que remueve el contenido del listado de alumnos
+function limpiarListado() {
+    // Se captura la clase card dentro del id y se lo remueve
+    const div = document.querySelectorAll("#alumnos .listado");
+    if (div != null) {
+        div.forEach((elemento) => elemento.remove());   
+    }
+}
+
 //Funcion que recibe un arreglo de alumnos y comprueba si un apellido esta en dicho arreglo
 function buscarAlumno(alumnos) {
-    let busqueda = prompt("ingrese el apellido a buscar").toLocaleUpperCase();
+    // Se captura el apellido a buscar
+    let busqueda = document.getElementById("apellidoBusqueda").value.toUpperCase();
+    // Se inicia el arreglo de alumnos encontrados
+    const alumnosEncontrados = [];
+    // Se inicia una bandera como false
     let encontrado = false;
 
     for (let i = 0; i < alumnos.length; i++) {
+        // Si se encuentra el alumno se cambia la bander y se lo inserta en el array alumnos encontrados
         if (alumnos[i].apellido === busqueda) {
             encontrado = true;
-            break;
+            alumnosEncontrados.push(alumnos[i]);
         }
     }
-
-    (encontrado)
-        ? alert(`El apellido "${busqueda}", está en el listado`)
-        : alert(`El apellido "${busqueda}", no está en el listado`);
+    // Si se encontro un alumno se limpia el contenedro y se recorre el arreglo de alumnos encontrados
+    // Para generar la tarjeta e insertarla al contenedor
+    if (encontrado) {
+        limpiarBusqueda();
+        alumnosEncontrados.forEach((elemento) => {
+            const alumnoBusqueda = generarAlumnoEncontrado(elemento);
+            contenedorBusqueda.appendChild(alumnoBusqueda);
+        });
+        // Se oculta el span de errorBuscar
+        document.getElementById("errorBuscar").style.display = "none"; // Ocultar mensaje de error si la longitud es correcta
+        // Si no se encontro un resultado se ejecuta la funcion buscarFallida
+        mostrarBusqueda();
+    } else {
+        buscarFallida();
+    }
 }
 
-function mayoPromediog(alumnos){
+// Funcion que captura el span errorBuscar y lo muestra por dos segundos
+function buscarFallida(){
+    var span = document.getElementById("errorBuscar");
+    span.style.display = "block";
+    setTimeout(function(){
+        span.style.display = "none";
+    }, 2000);
+}
+
+function accionFallida(){
+    var span = document.getElementById("listadoVacio");
+    span.style.display = "block";
+    setTimeout(function(){
+        span.style.display = "none";
+    }, 2000);
+}
+
+function mostrarBusqueda(){
+    //var div = document.getElementById("encontrado");
+    //console.log(div);
+    //div.style.display = "d-flex";
+    setTimeout(function(){
+        limpiarBusqueda();
+    }, 2000);
+}
+
+// Funcion que calcula el mayor de todos los promedios generales del array de alumnos
+function mayoPromediog(alumnos) {
     let mejorPuntaje = alumnos[0].promediog;
     for (let i = 0; i < alumnos.length; i++) {
-        if (alumnos[i].promediog > mejorPuntaje.promediog) {
+        if (alumnos[i].promediog > mejorPuntaje) {
             mejorPuntaje = alumnos[i].promediog;
         }
     }
     return mejorPuntaje;
 }
 
+// Funcion que encuntra todos los alumnos con el mayor promedio general para mostrar los alumnos top
 function mejorAlumno(alumnos) {
-    let mejoresAlumnos=[];
+    let mejoresAlumnos = [];
     for (let i = 0; i < alumnos.length; i++) {
         if (alumnos[i].promediog === mayoPromediog(alumnos)) {
+            // Se guardan en el array mejoresAlumnos todos los alumnos con el promedio general mas alto
             mejoresAlumnos.push(alumnos[i]);
         }
     }
-    mejoresAlumnos.forEach(elemento => new Alumno(elemento).datosMAlumno());
+    // Se limpia el contendedor de mejores alumnos
+    limpiarMejores();
+    // Se recorre el array de mejoresAlumnos, se genera la tarjeta y se la carga al contenedor
+    mejoresAlumnos.forEach((elemento) => {
+        const alumnosTop = generarAlumnosTop(elemento);
+        contenedorMejores.appendChild(alumnosTop);
+    });
 }
 
-//Funcion que permite la carga de un alumno, asignando a las variables las funciones de cada caso, luego genera un nuevo objeto y lo guarda en el arreglo de alumnos
-function cargarAlumno() {
-    let dni = solicitarDNI();
-    let ape = solicitarTexto("Apellido", 15).toUpperCase();
-    let nom = solicitarTexto("Nombre", 25).toLocaleUpperCase();
-    let trim1 = solicitarNotas("Trimestre 1");
-    let trim2 = solicitarNotas("Trimestre 2");
-    let trim3 = solicitarNotas("Trimestre 3");
-    let prom1 = calcularPromedio(trim1);
-    let prom2 = calcularPromedio(trim2);
-    let prom3 = calcularPromedio(trim3);
-    let promg = ((prom1 + prom2 + prom3) / 3).toFixed(1);
-
-    const alumno = new Alumno({
-        dni: dni,
-        apellido: ape,
-        nombre: nom,
-        trim1: trim1,
-        promedio1: prom1,
-        trim2: trim2,
-        promedio2: prom2,
-        trim3: trim3,
-        promedio3: prom3,
-        promediog: promg,
-    })
-
-    alumnos.push(alumno);
-}
-
-function eliminarUltimoAlumno(alumnos){
-    if (alumnos.length === 0){
-        alert("El arreglo esta vacio y no se puede eliminar...")
+function eliminarUltimoAlumno(alumnos) {
+    if (alumnos.length === 0) {
+        accionFallida();
     } else {
         alumnos.pop();
-        alert("El último alumno ingresado fué eliminado");
-    }    
-}
-
-//Funcion que permite listar todos los alumnos cargados por consola
-function listarAlumnos(alumnos) {
-    if (alumnos.length === 0){
-        alert("No hay alumnos por mostrar. El listado esta vacío")
-    } else{
-        alumnos.forEach(elemento => new Alumno(elemento).datosAlumno());
+        limpiarListado();
+        alumnos.forEach((elemento) => {
+        // Genero el elemento alumno
+        const alumno = generarAlumno(elemento);
+        // Agrego en elemento alumno al contenedor
+        contenedorAlumnos.appendChild(alumno);
+        });
+        mejorAlumno(alumnos);
     }
 }
 
-
-//Funcion que muestra un menu de opciones
-function menu() {
-    let opcion;
-    do {
-        opcion = prompt("Menu Alumnos:\n1. Registrar Alumno\n2. Eliminar Ultimo Alumno\n3. Buscar Alumno\n4 Listar Alumnos\n5 Mejor Alumno\n Escribe 's' o 'S' para salir del menu").toLocaleLowerCase();
-
-        switch (opcion) {
-            case "1":
-                alert("Esta opcion permite la carga de un alumno y 3 notas por trimestre en un total de 3 trimestres");
-                cargarAlumno();
-                break;
-            case "2":
-                alert("Esta opción elimina el último alumno ingresado, si el listado no esta vacio");
-                eliminarUltimoAlumno(alumnos);
-                break;
-            case "3":
-                alert("Esta opción permite buscar mostrar si un alumno se encuentra el el listado");
-                buscarAlumno(alumnos);
-                break;
-            case "4":
-                alert("Esta opción muestra todos los alumnos cargados por consola");
-                listarAlumnos(alumnos);
-                break;
-            case "5":
-                alert("Esta opción muestra el o los alumno/s con mejor promedio/s");
-                mejorAlumno(alumnos);
-                break;
-            case "s":
-                alert("saliendo del menú...");
-                break;
-            default:
-                (opcion === "s")
-                    ? alert("saliendo del menú...")
-                    : alert("Opción no válida. Por favo ingrese un número del 1 al 4 o escriba 's' o 'S' para salir");
-        }
-    } while (opcion !== "s");
+function ordenarListado(alumnos){
+    if (alumnos.length === 0){
+        accionFallida();
+    }else{
+        let listadoOrdenado = alumnos.sort((a,b) => a.apellido.localeCompare(b.apellido));
+        limpiarListado();
+        alumnos.forEach((elemento) => {
+        // Genero el elemento alumno
+        const alumno = generarAlumno(elemento);
+        // Agrego en elemento alumno al contenedor
+        contenedorAlumnos.appendChild(alumno);
+        });
+        mejorAlumno(alumnos);
+    }   
 }
-
-//Ejecuta el menu de opciones
-menu();
-
-
-
