@@ -2,146 +2,286 @@ const alumnos = [];
 
 const formulario = document.getElementById("formulario");
 const contenedorAlumnos = document.getElementById("alumnos");
-const contenedorBusqueda = document.getElementById("resultadoBusqueda");    
+const contenedorBusqueda = document.getElementById("resultadoBusqueda");
 const contenedorMejores = document.getElementById("mejoresAlumnos");
 const menuEliminar = document.getElementById("eliminarUltimo");
 const menuOrdenar = document.getElementById("ordenarAsc");
+const recuperarListado = document.getElementById("recuperar");
+let estaCargado = false;
 
 class Alumno {
-    constructor({ dni, apellido, nombre, t1n1, t1n2, t1n3, t2n1, t2n2, t2n3, t3n1, t3n2, t3n3, promedio1, promedio2, promedio3, promediog }) {
-        this.dni = dni;
-        this.apellido = apellido;
-        this.nombre = nombre;
-        this.t1n1 = t1n1;
-        this.t1n2 = t1n2;
-        this.t1n3 = t1n3;
-        this.t2n1 = t2n1;
-        this.t2n2 = t2n2;
-        this.t2n3 = t2n3;
-        this.t3n1 = t3n1;
-        this.t3n2 = t3n2;
-        this.t3n3 = t3n3;
-        this.promedio1 = promedio1;
-        this.promedio2 = promedio2;
-        this.promedio3 = promedio3;
-        this.promediog = promediog;
-    }
+  constructor({
+    dni,
+    apellido,
+    nombre,
+    t1n1,
+    t1n2,
+    t1n3,
+    t2n1,
+    t2n2,
+    t2n3,
+    t3n1,
+    t3n2,
+    t3n3,
+    promedio1,
+    promedio2,
+    promedio3,
+    promediog,
+  }) {
+    this.dni = dni;
+    this.apellido = apellido;
+    this.nombre = nombre;
+    this.t1n1 = t1n1;
+    this.t1n2 = t1n2;
+    this.t1n3 = t1n3;
+    this.t2n1 = t2n1;
+    this.t2n2 = t2n2;
+    this.t2n3 = t2n3;
+    this.t3n1 = t3n1;
+    this.t3n2 = t3n2;
+    this.t3n3 = t3n3;
+    this.promedio1 = promedio1;
+    this.promedio2 = promedio2;
+    this.promedio3 = promedio3;
+    this.promediog = promediog;
+  }
 }
 
 function validarDNI(input) {
-    // Obtener el valor del input
+  try {
     var dni = input.value;
-    // Expresión regular para verificar que el valor tenga exactamente 8 dígitos
     var regex = /^\d{8}$/;
     var maxLength = 8;
-    // Verificar si el valor cumple con la expresión regular
     if (!regex.test(dni)) {
-        // Si no cumple, eliminar el último carácter ingresado
-        input.value = dni.slice(0, 8);
-        // Si no cumple con la longitud muestra el span
-    } else if (dni.length < maxLength) {
-        document.getElementById("errorDNI").style.display = "inline";
-        // Si la longitud es correcta oculta el span
-    } else {
-        document.getElementById("errorDNI").style.display = "none";
+      input.value = dni.slice(0, 8);
+    } else if ((dni.length = maxLength)) {
+      document.getElementById("errorDNI").style.display = "none";
     }
+  } catch (error) {
+    console.log("Hubo un error en la funcion validar dni", error);
+  }
 }
 
 function validarApellidoNombre(input) {
-    // Obtener el valor del input
+  try {
     var valor = input.value;
-    // Expresión regular para verificar el formato del apellido
     var regex = /^[A-Za-z][A-Za-z\s]*$/;
-    // Verificar si el valor cumple con la expresión regular y no comienza con espacios en blanco
     if (!regex.test(valor) || /^\s/.test(valor)) {
-        // Si no cumple, eliminar los caracteres no permitidos y los espacios iniciales
-        input.value = valor.replace(/^\s+/, '').replace(/[^A-Za-z\s]/g, '');
+      input.value = valor.replace(/^\s+/, "").replace(/[^A-Za-z\s]/g, "");
     }
+  } catch (error) {
+    console.log(
+      "Hubo en error en la funcion que valida el nombre o apellido",
+      error
+    );
+  }
 }
 
 function validarNota(input) {
-    // Obtener el valor del input
+  try {
     var nota = input.value;
-    // Expresión regular para permitir solo números decimales
     var regex = /^\d*\.?\d*$/;
-    // Verificar si el valor cumple con la expresión regular
     if (!regex.test(nota)) {
-        // Si no cumple, eliminar los caracteres no permitidos
-        input.value = nota.replace(/[^\d.]/g, '');
+      input.value = nota.replace(/[^\d.]/g, "");
     }
+  } catch (error) {
+    console.log("Hubo un erro en la funcion que valida la nota", error);
+  }
 }
 
 function moveToNextInput(event, currentInput) {
-    // Si se presiona la tecla enter
+  try {
     if (event.key === "Enter") {
-        // Previene la recarga de la pagina
-        event.preventDefault();
-        // Guarda en el array todos los inputs
-        var inputs = Array.from(document.querySelectorAll('input:not([type="submit"])'));
-        var index = inputs.indexOf(currentInput);
-        if (index !== -1 && index < inputs.length - 1) {
-            // Avanza de input al presionar enter
-            inputs[index + 1].focus();
-            //Si el input es t3n3 pasa el foco al boton
-        } else if (currentInput.id === "t3n3") {
-            document.querySelector('button[id="registrar"]').focus();
-        } else if (currentInput.id === "apellidoBusqueda") {
-            document.querySelector('button[id="buscar"]').focus();
-        }
+      event.preventDefault();
+      var inputs = Array.from(
+        document.querySelectorAll('input:not([type="submit"])')
+      );
+      var index = inputs.indexOf(currentInput);
+      if (index !== -1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      } else if (currentInput.id === "t3n3") {
+        document.querySelector('button[id="registrar"]').focus();
+      } else if (currentInput.id === "apellidoBusqueda") {
+        document.querySelector('button[id="buscar"]').focus();
+      }
     }
+  } catch (error) {
+    console.log(
+      "Hubo un error en la funcion que mueve el curso al presionar enter",
+      error
+    );
+  }
 }
 
 function validarFormulario() {
-    // Guardo en dni el valor del input dni
+  try {
     var dni = document.getElementById("dni");
-    var maxLength = 8; // número máximo de dígitos permitidos
-    // Verifico si la longitud es distinta de lo permitido
+    var maxLength = 8;
     if (dni.value.length !== maxLength) {
-        // Muestra el span errorDNI
-        document.getElementById("errorDNI").style.display = "inline";
-        // Si esta todo correcto oculta el span, carga el alumno y verifica los mejores alumnos
+      document.getElementById("errorDNI").style.display = "inline";
     } else {
-        document.getElementById("errorDNI").style.display = "none";
-        cargarAlumno(); // Permitir envío del formulario
-        mejorAlumno(alumnos);
+      document.getElementById("errorDNI").style.display = "none";
+      cargarAlumno();
+      mejorAlumno(alumnos);
     }
+  } catch (error) {
+    console.log("Hubo un error en la funcion que valida el formulario", error);
+  }
 }
 
 formulario.addEventListener("submit", (event) => {
-    //Evitamos que se recargue la pagina
-    event.preventDefault();
-    //Valida los datos del formulario
-    validarFormulario();
-})
+  event.preventDefault();
+  validarFormulario();
+});
 
 formBuscar.addEventListener("submit", (event) => {
-    //Evitamos que se recargue la pagina
-    event.preventDefault();
-    // Busca el alumno y resetea el form buscar
-    buscarAlumno(alumnos);
-    formBuscar.reset();
-})
+  event.preventDefault();
+  buscarAlumno(alumnos);
+  formBuscar.reset();
+});
 
 menuEliminar.addEventListener("click", (event) => {
-    //Evitamos que se recargue la pagina
-    event.preventDefault();
-    // Busca el alumno y resetea el form buscar
-    eliminarUltimoAlumno(alumnos);
-})
+  event.preventDefault();
+  messEliminarAlumno();
+});
 
 menuOrdenar.addEventListener("click", (event) => {
-    //Evitamos que se recargue la pagina
-    event.preventDefault();
-    // Busca el alumno y resetea el form buscar
-    ordenarListado(alumnos);
-})
+  event.preventDefault();
+  ordenarListado(alumnos);
+});
 
-//Funcion que permite la carga de un alumno, asignando a las variables las funciones de cada caso, luego genera un nuevo objeto y lo guarda en el arreglo de alumnos
+recuperarListado.addEventListener("click", (event) => {
+  event.preventDefault();
+  recuperarAlumnos();
+});
+
+function persistenciaAlumnos(alumnos) {
+  try {
+    const alumnosJSON = JSON.stringify(alumnos);
+    localStorage.setItem("alumnos", alumnosJSON);
+  } catch (error) {
+    console.log("Hubo un error en la funcin de persistencia", error);
+  }
+}
+
+function messAlumnoCargado() {
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: '<span style="font-size: 20px;">Alumno cargado correctamente</span>',
+    width: 300,
+    showConfirmButton: false,
+    timer: 1400,
+    customClass: {
+      icon: "swal2-icon-custom",
+    },
+  });
+}
+
+function messAlumnoNoEncontrado() {
+  Swal.fire({
+    position: "top-end",
+    icon: "info",
+    title: '<span style="font-size: 20px;">Alumno no encontrado</span>',
+    html: '<span style="font-size: 16px;">El alumno no está en el listado</span>',
+    width: 300,
+    showConfirmButton: false,
+    timer: 1400,
+    customClass: {
+      icon: "swal2-icon-custom",
+    },
+  });
+}
+
+function messEliminarAlumno() {
+  if (alumnos.length != 0) {
+    Swal.fire({
+      title:
+        '<span style="font-size: 20px;">¿Estás seguro que deseas eliminar el último alumno?</span>',
+      html: '<span style="font-size: 16px;">No podrás revertir esta acción</span>',
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, Eliminar alumno!",
+      customClass: {
+        icon: "swal2-icon-custom",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        eliminarUltimoAlumno(alumnos);
+      }
+    });
+  } else {
+    Swal.fire({
+      title: '<span style="font-size: 20px;">Imposible eliminar</span>',
+      html: '<span style="font-size: 16px;">El lsitado está vacio y no se puede eliminar</span>',
+      icon: "error",
+      width: 300,
+      showConfirmButton: false,
+      timer: 1400,
+      customClass: {
+        icon: "swal2-icon-custom",
+      },
+    });
+  }
+}
+
+function messListadoVacio() {
+  Swal.fire({
+    position: "center",
+    icon: "warning",
+    title: '<span style="font-size: 20px;">Carga no Realizada</span>',
+    html: '<span style="font-size: 16px;">El listado está vacio o ya ha sido cargado</span>',
+    width: 300,
+    showConfirmButton: false,
+    timer: 1400,
+    customClass: {
+      icon: "swal2-icon-custom",
+    },
+  });
+}
+
+function messOrdenFallido() {
+  Swal.fire({
+    position: "center",
+    icon: "warning",
+    title: '<span style="font-size: 20px;">Ordenamiento no Realizado</span>',
+    html: '<span style="font-size: 16px;">El listado está vacio y no puede ordenarse</span>',
+    width: 300,
+    showConfirmButton: false,
+    timer: 1400,
+    customClass: {
+      icon: "swal2-icon-custom",
+    },
+  });
+}
+
+function messListadoCargado() {
+  Swal.fire({
+    position: "center",
+    icon: "info",
+    title: '<span style="font-size: 20px;">Carga Realizada</span>',
+    html: '<span style="font-size: 16px;">El listado ha sido cargado</span>',
+    width: 300,
+    showConfirmButton: false,
+    timer: 1400,
+    customClass: {
+      icon: "swal2-icon-custom",
+    },
+  });
+}
+
+function focusInput() {
+  const inputElement = document.getElementById("dni");
+  inputElement.focus();
+}
+
 function cargarAlumno() {
-    // Se captura los valores de los inputs y se hacen los calculos correspondientes
+  try {
     const dni = document.getElementById("dni").value;
-    const ape = document.getElementById("apellido").value.toUpperCase();
-    const nom = document.getElementById("nombre").value.toUpperCase();
+    const ape = document.getElementById("apellido").value.trim().toUpperCase();
+    const nom = document.getElementById("nombre").value.trim().toUpperCase();
     const t1n1 = parseFloat(document.getElementById("t1n1").value);
     const t1n2 = parseFloat(document.getElementById("t1n2").value);
     const t1n3 = parseFloat(document.getElementById("t1n3").value);
@@ -157,248 +297,309 @@ function cargarAlumno() {
     const promg = calcularPromedio(prom1, prom2, prom3);
 
     const alumno = new Alumno({
-        dni: dni,
-        apellido: ape,
-        nombre: nom,
-        t1n1: t1n1,
-        t1n2: t1n2,
-        t1n3: t1n3,
-        promedio1: prom1,
-        t2n1: t2n1,
-        t2n2: t2n2,
-        t2n3: t2n3,
-        promedio2: prom2,
-        t3n1: t3n1,
-        t3n2: t3n2,
-        t3n3: t3n3,
-        promedio3: prom3,
-        promediog: promg,
-    })
-    // Se carga el alumno el array de alumnos
+      dni: dni,
+      apellido: ape,
+      nombre: nom,
+      t1n1: t1n1,
+      t1n2: t1n2,
+      t1n3: t1n3,
+      promedio1: prom1,
+      t2n1: t2n1,
+      t2n2: t2n2,
+      t2n3: t2n3,
+      promedio2: prom2,
+      t3n1: t3n1,
+      t3n2: t3n2,
+      t3n3: t3n3,
+      promedio3: prom3,
+      promediog: promg,
+    });
     alumnos.push(alumno);
-    // Genero el elemento alumno
+    persistenciaAlumnos(alumnos);
+    messAlumnoCargado();
     const elementoAlumno = generarAlumno(alumno);
-    // Agrego en elemento alumno al contenedor
     contenedorAlumnos.appendChild(elementoAlumno);
-    // Se limpia el formulario
     formulario.reset();
+    focusInput();
+  } catch (error) {
+    console.log(
+      "Hubo un error en la funcion que carga los datos del alumno",
+      error
+    );
+  }
 }
 
-//Funcion que recibe un arreglo de notas y calcula su promedio
 function calcularPromedio(n1, n2, n3) {
+  try {
     let aux = n1 + n2 + n3;
     let promedio = 0;
     promedio = parseFloat((aux / 3).toFixed(1));
-
     return promedio;
+  } catch (error) {
+    console.log("Hubo un error en la funcion que calcula el promedio", error);
+  }
 }
 
 function generarAlumno(alumno) {
-    const div = document.createElement("div");
-    //Se crea el div a insertar
-    div.innerHTML = `
+  const div = document.createElement("div");
+  div.innerHTML = `
         <div class="card" style="width: 18rem;">
             <img src="assets/img/estudiante.jpg" class="card-img-top w-50 h-50 mx-auto" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">${alumno.apellido} ${alumno.nombre}</h5>
-                <p class="card-text"> D.N.I.: ${alumno.dni}</p>
-                <p class="card-text"> Notas 1º trimestre: ${alumno.t1n1} - ${alumno.t1n2} - ${alumno.t1n3}</p>
-                <p class="card-text">Promedio 1º Timestre: ${alumno.promedio1}</p>
-                <p class="card-text"> Notas 2º trimestre: ${alumno.t2n1} - ${alumno.t2n2} - ${alumno.t2n3}</p>
-                <p class="card-text">Promedio 2º Timestre: ${alumno.promedio2}</p>
-                <p class="card-text"> Notas 3º trimestre: ${alumno.t3n1} - ${alumno.t3n2} - ${alumno.t3n3}</p>
-                <p class="card-text">Promedio 3º Timestre: ${alumno.promedio3}</p>
-                <p class="card-text">Promedio General: ${alumno.promediog}</p>
+            <div class="card-body card-body-alum">
+                <h5 class="card-title titulo-listado">${alumno.apellido} ${alumno.nombre}</h5>
+                <p class="card-text texto-tarjeta"> D.N.I.: ${alumno.dni}</p>
+                <p class="card-text texto-tarjeta"> Notas 1º trimestre: ${alumno.t1n1} - ${alumno.t1n2} - ${alumno.t1n3}</p>
+                <p class="card-text texto-tarjeta">Promedio 1º Timestre: ${alumno.promedio1}</p>
+                <p class="card-text texto-tarjeta"> Notas 2º trimestre: ${alumno.t2n1} - ${alumno.t2n2} - ${alumno.t2n3}</p>
+                <p class="card-text texto-tarjeta">Promedio 2º Timestre: ${alumno.promedio2}</p>
+                <p class="card-text texto-tarjeta"> Notas 3º trimestre: ${alumno.t3n1} - ${alumno.t3n2} - ${alumno.t3n3}</p>
+                <p class="card-text texto-tarjeta">Promedio 3º Timestre: ${alumno.promedio3}</p>
+                <p class="card-text texto-tarjeta">Promedio General: ${alumno.promediog}</p>
             </div>
         </div>
     `;
-    //Se agregan las clases del div creado
-    div.classList.add("card", "listado");
+  div.classList.add("card", "contenedor", "listado");
 
-    return div;
+  return div;
 }
 
 function generarAlumnoEncontrado(alumno) {
+  try {
     const div = document.createElement("div");
-    // Se crea el div a insertar
     div.innerHTML = `
         <div class="card" style="width: 12rem;">
             <img src="assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
-            <div class="card-body">
+            <div class="card-body card-body-search">
                 <h5 class="card-title titulo-alumno-encontrado">${alumno.apellido} ${alumno.nombre}</h5>
                 <p class="card-text texto-alumno-encontrado"> D.N.I.: ${alumno.dni}</p>
                 <p class="card-text texto-alumno-encontrado">Promedio General: ${alumno.promediog}</p>
             </div>
         </div>
     `;
-    //Se agregan las clases del div creado
     div.classList.add("card", "encontrado");
 
     return div;
+  } catch (error) {
+    console.log(
+      "Hubo un error en la funcion que genera el alumno encontrado",
+      error
+    );
+  }
 }
 
 function generarAlumnosTop(alumno) {
+  try {
     const div = document.createElement("div");
-    // Se crea el div a insertar
     div.innerHTML = `
         <div class="card" style="width: 12rem;">
             <img src="assets/img/estudiante.jpg" class="card-img-top w-25 h-25 mx-auto" alt="...">
-            <div class="card-body">
-                <h5 class="card-title titulo-alumno-encontrado">${alumno.apellido} ${alumno.nombre}</h5>
-                <p class="card-text texto-alumno-encontrado"> D.N.I.: ${alumno.dni}</p>
-                <p class="card-text texto-alumno-encontrado">Promedio General: ${alumno.promediog}</p>
+            <div class="card-body card-body-top">
+                <h5 class="card-title titulo-alumno-top">${alumno.apellido} ${alumno.nombre}</h5>
+                <p class="card-text texto-alumno-top"> D.N.I.: ${alumno.dni}</p>
+                <p class="card-text texto-alumno-top">Promedio General: ${alumno.promediog}</p>
             </div>
         </div>
-
     `;
-    //Se agregan las clases del div creado
     div.classList.add("card", "mejores");
 
     return div;
+  } catch (error) {
+    console.log(
+      "Hubo un error en la funcion que genera los mejore alumnos",
+      error
+    );
+  }
 }
 
-// Funcion que remueve el contenido de una busqueda exitosa
 function limpiarBusqueda() {
-    // Se captura la clase card dentro del id y se lo remueve
+  try {
     const div = document.querySelectorAll("#resultadoBusqueda .encontrado");
     if (div != null) {
-        div.forEach((elemento) => elemento.remove());   
+      div.forEach((elemento) => elemento.remove());
     }
+  } catch (error) {
+    console.error("Hubo un error en la funcion que limpia la busqueda", error);
+  }
 }
 
-// Funcion que remueve el contenido de una los mejores alumnos
 function limpiarMejores() {
-    // Se captura la clase card dentro del id y se lo remueve
+  try {
     const div = document.querySelectorAll("#mejoresAlumnos .mejores");
     if (div != null) {
-        div.forEach((elemento) => elemento.remove());   
+      div.forEach((elemento) => elemento.remove());
     }
+  } catch (error) {
+    console.error(
+      "Hubo un error en la funcion que limpia los mejores alumnos",
+      error
+    );
+  }
 }
 
-// Funcion que remueve el contenido del listado de alumnos
 function limpiarListado() {
-    // Se captura la clase card dentro del id y se lo remueve
+  try {
     const div = document.querySelectorAll("#alumnos .listado");
     if (div != null) {
-        div.forEach((elemento) => elemento.remove());   
+      div.forEach((elemento) => elemento.remove());
     }
+  } catch (error) {
+    console.error(
+      "Hubo un error en la funcion que limpia el listado de alumnos",
+      error
+    );
+  }
 }
 
-//Funcion que recibe un arreglo de alumnos y comprueba si un apellido esta en dicho arreglo
 function buscarAlumno(alumnos) {
-    // Se captura el apellido a buscar
-    let busqueda = document.getElementById("apellidoBusqueda").value.toUpperCase();
-    // Se inicia el arreglo de alumnos encontrados
+  try {
+    let busqueda = document
+      .getElementById("apellidoBusqueda")
+      .value.trim()
+      .toUpperCase();
     const alumnosEncontrados = [];
-    // Se inicia una bandera como false
     let encontrado = false;
-
     for (let i = 0; i < alumnos.length; i++) {
-        // Si se encuentra el alumno se cambia la bander y se lo inserta en el array alumnos encontrados
-        if (alumnos[i].apellido === busqueda) {
-            encontrado = true;
-            alumnosEncontrados.push(alumnos[i]);
-        }
+      if (alumnos[i].apellido === busqueda) {
+        encontrado = true;
+        alumnosEncontrados.push(alumnos[i]);
+        console.log(alumnosEncontrados);
+      }
     }
-    // Si se encontro un alumno se limpia el contenedro y se recorre el arreglo de alumnos encontrados
-    // Para generar la tarjeta e insertarla al contenedor
     if (encontrado) {
-        limpiarBusqueda();
-        alumnosEncontrados.forEach((elemento) => {
-            const alumnoBusqueda = generarAlumnoEncontrado(elemento);
-            contenedorBusqueda.appendChild(alumnoBusqueda);
-        });
-        // Se oculta el span de errorBuscar
-        document.getElementById("errorBuscar").style.display = "none"; // Ocultar mensaje de error si la longitud es correcta
-        // Si no se encontro un resultado se ejecuta la funcion buscarFallida
-        mostrarBusqueda();
+      limpiarBusqueda();
+      alumnosEncontrados.forEach((elemento) => {
+        const alumnoBusqueda = generarAlumnoEncontrado(elemento);
+        contenedorBusqueda.appendChild(alumnoBusqueda);
+      });
+      mostrarBusqueda();
     } else {
-        buscarFallida();
+      messAlumnoNoEncontrado();
     }
+  } catch (error) {
+    console.log("Hubo un error en la funcion de busqueda de alumno", error);
+  }
 }
 
-// Funcion que captura el span errorBuscar y lo muestra por dos segundos
-function buscarFallida(){
-    var span = document.getElementById("errorBuscar");
-    span.style.display = "block";
-    setTimeout(function(){
-        span.style.display = "none";
-    }, 2000);
-}
-
-// Funcion que captura el span si el array alumnos esta vacio y muestra un mensaje por dos segundos
-function accionFallida(){
-    var span = document.getElementById("listadoVacio");
-    span.style.display = "block";
-    setTimeout(function(){
-        span.style.display = "none";
-    }, 2000);
-}
-
-// Funcion que muestra el alumno encontrado por 3 segundos
-function mostrarBusqueda(){
-    setTimeout(function(){
-        limpiarBusqueda();
+function mostrarBusqueda() {
+  try {
+    setTimeout(function () {
+      limpiarBusqueda();
     }, 3000);
+  } catch (error) {
+    console.log("Hubo un error en la funcion de mostrar la busqueda", error);
+  }
 }
 
-// Funcion que calcula el mayor de todos los promedios generales del array de alumnos
 function mayoPromediog(alumnos) {
+  try {
     let mejorPuntaje = alumnos[0].promediog;
     for (let i = 0; i < alumnos.length; i++) {
-        if (alumnos[i].promediog > mejorPuntaje) {
-            mejorPuntaje = alumnos[i].promediog;
-        }
+      if (alumnos[i].promediog > mejorPuntaje) {
+        mejorPuntaje = alumnos[i].promediog;
+      }
     }
     return mejorPuntaje;
+  } catch (error) {
+    console.log(
+      "Hubo un erro en la funcion que calcula el mayor promedio",
+      error
+    );
+  }
 }
 
-// Funcion que encuntra todos los alumnos con el mayor promedio general para mostrar los alumnos top
 function mejorAlumno(alumnos) {
+  try {
     let mejoresAlumnos = [];
     for (let i = 0; i < alumnos.length; i++) {
-        if (alumnos[i].promediog === mayoPromediog(alumnos)) {
-            // Se guardan en el array mejoresAlumnos todos los alumnos con el promedio general mas alto
-            mejoresAlumnos.push(alumnos[i]);
-        }
+      if (alumnos[i].promediog === mayoPromediog(alumnos)) {
+        mejoresAlumnos.push(alumnos[i]);
+      }
     }
-    // Se limpia el contendedor de mejores alumnos
     limpiarMejores();
-    // Se recorre el array de mejoresAlumnos, se genera la tarjeta y se la carga al contenedor
     mejoresAlumnos.forEach((elemento) => {
-        const alumnosTop = generarAlumnosTop(elemento);
-        contenedorMejores.appendChild(alumnosTop);
+      const alumnosTop = generarAlumnosTop(elemento);
+      contenedorMejores.appendChild(alumnosTop);
     });
+  } catch (error) {
+    console.log(
+      "Hubo un erro en la funcion que calcula los mejores alumnos",
+      error
+    );
+  }
 }
 
 function eliminarUltimoAlumno(alumnos) {
-    if (alumnos.length === 0) {
-        accionFallida();
-    } else {
-        alumnos.pop();
-        limpiarListado();
-        alumnos.forEach((elemento) => {
-        // Genero el elemento alumno
-        const alumno = generarAlumno(elemento);
-        // Agrego en elemento alumno al contenedor
-        contenedorAlumnos.appendChild(alumno);
-        });
-        mejorAlumno(alumnos);
-    }
+  try {
+    alumnos.pop();
+    limpiarListado();
+    persistenciaAlumnos(alumnos);
+    alumnos.forEach((elemento) => {
+      const alumno = generarAlumno(elemento);
+      contenedorAlumnos.appendChild(alumno);
+    });
+    mejorAlumno(alumnos);
+    Swal.fire({
+      title: '<span style="font-size: 20px;">Eliminado</span>',
+      html: '<span style="font-size: 16px;">El alumno ha sido borrado</span>',
+      icon: "success",
+      width: 300,
+      showConfirmButton: false,
+      timer: 1400,
+      customClass: {
+        icon: "swal2-icon-custom",
+      },
+    });
+  } catch (error) {
+    console.log(
+      "Hubo un error en la funcion que elimina el ultimo alumno",
+      error
+    );
+  }
 }
 
-function ordenarListado(alumnos){
-    if (alumnos.length === 0){
-        accionFallida();
-    }else{
-        let listadoOrdenado = alumnos.sort((a,b) => a.apellido.localeCompare(b.apellido));
-        limpiarListado();
-        alumnos.forEach((elemento) => {
-        // Genero el elemento alumno
+function ordenarListado(alumnos) {
+  try {
+    if (alumnos.length === 0) {
+      messOrdenFallido();
+    } else {
+      let listadoOrdenado = alumnos.sort((a, b) =>
+        a.apellido.localeCompare(b.apellido)
+      );
+      limpiarListado();
+      listadoOrdenado.forEach((elemento) => {
         const alumno = generarAlumno(elemento);
-        // Agrego en elemento alumno al contenedor
         contenedorAlumnos.appendChild(alumno);
-        });
-        mejorAlumno(alumnos);
-    }   
+      });
+      mejorAlumno(alumnos);
+    }
+  } catch (error) {
+    console.log(
+      "Hubo un erro en la funcion que ordena el listado de alumnos",
+      error
+    );
+  }
+}
+
+function recuperarAlumnos() {
+  try {
+    const alumnosRecuperadosJSON = localStorage.getItem("alumnos");
+    if (alumnosRecuperadosJSON && !estaCargado) {
+      const alumnosRecuperados = JSON.parse(alumnosRecuperadosJSON);
+      alumnosRecuperados.forEach((elemento) => {
+        alumnos.push(elemento);
+      });
+      limpiarListado();
+      alumnos.forEach((elemento) => {
+        const alumno = generarAlumno(elemento);
+        contenedorAlumnos.appendChild(alumno);
+      });
+      mejorAlumno(alumnos);
+      messListadoCargado();
+      estaCargado = true;
+    } else {
+      messListadoVacio();
+    }
+  } catch (error) {
+    console.log("Hubo un error en la función de recuperar alumnos", error);
+  }
 }

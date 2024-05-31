@@ -1,3 +1,9 @@
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -32,6 +38,32 @@ h5 {
   background-color: #dee2e6;
 }
 
+.titulo-read {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.subtitulo-read {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.contenido-read {
+  font-size: 1rem;
+}
+
+.item-opcion {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.nuevo {
+  font-weight: 600;
+  font-style: italic;
+  color: rgb(236, 15, 26);
+}
+
 .fondo-alumnos {
   background-color: #dee2e6;
 }
@@ -42,13 +74,6 @@ h5 {
 
 .navbar-brand {
   font-size: 2rem;
-}
-
-#errorBuscar,
-#listadoVacio {
-  display: none;
-  font-size: 1.2rem;
-  color: white;
 }
 
 .form-contacto {
@@ -81,25 +106,44 @@ h5 {
 .mejores {
   font-size: 1.7rem;
   font-weight: 600;
+  background-color: rgb(238, 234, 13);
 }
 
-.card-body {
-  background-color: rgb(153, 151, 151);
+.contenedor {
+  background-color: rgb(60, 165, 226);
 }
 
-.card-title {
+.encontrado {
+  background-color: rgb(241, 55, 55);
+}
+
+.card-body-alum {
+  background-color: rgb(60, 165, 226);
+}
+
+.card-body-top {
+  background-color: rgb(238, 234, 13);
+}
+
+.card-body-search {
+  background-color: rgb(241, 55, 55);
+}
+
+.titulo-listado {
   margin-bottom: 1rem;
   padding: 0.5rem;
   text-align: center;
-  background-color: rgb(133, 130, 130);
+  background-color: rgb(22, 147, 219);
   font-weight: 600;
+  color: white;
 }
 
-.card-text {
+.texto-tarjeta {
   margin-bottom: 0.5rem;
 }
 
-.texto-alumno-encontrado {
+.texto-alumno-encontrado,
+.texto-alumno-top {
   font-size: 0.8rem;
 }
 
@@ -109,6 +153,20 @@ h5 {
   padding: 0.2rem;
   text-align: center;
   font-size: 1rem;
-  background-color: rgb(133, 130, 130);
+  background-color: rgb(235, 30, 30);
   font-weight: 600;
+}
+
+.titulo-alumno-top {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem;
+  text-align: center;
+  font-size: 1rem;
+  background-color: rgb(192, 180, 9);
+  font-weight: 600;
+}
+
+.swal2-icon-custom {
+  font-size: 0.7em; /* Ajusta el tamaño del icono según tus necesidades */
 }
